@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A212263 — Adib Nurman | e-Portfolio</title>
+  <style>
+    /* ─────────────────────────────────────────
+       TOKEN SYSTEM
+       Palette: SDG 1 "No Poverty"
+       Warm red/terracotta → hope orange → ivory
+    ───────────────────────────────────────── */
+    :root {
+      --red:      #E5243B;   /* SDG 1 official red */
+      --orange:   #F26522;   /* warmth / opportunity */
+      --gold:     #FDB714;   /* prosperity accent */
+      --dark:     #1A1108;   /* near-black warm */
+      --mid:      #3D2B1F;   /* deep brown */
+      --ink:      #2C1A10;   /* body text */
+      --mist:     #FDF6EE;   /* ivory background */
+      --card:     #FFFFFF;
+      --border:   #EAD9CC;
+
+      --font-display: 'Georgia', 'Times New Roman', serif;
+      --font-body:    'Segoe UI', system-ui, -apple-system, sans-serif;
+      --font-mono:    'Courier New', Courier, monospace;
+
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(26,17,8,0.10);
+      --transition: 0.28s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--mist);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--mist); }
+    ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 3px; }
+
+    /* ── SKIP LINK ── */
+    .skip-link {
+      position: absolute; top: -40px; left: 0;
+      background: var(--red); color: #fff;
+      padding: 8px 16px; z-index: 9999;
+      transition: top 0.2s;
+    }
+    .skip-link:focus { top: 0; }
+
+    /* ─────────────────────────────────────────
+       NAV
+    ───────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--dark);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5vw;
+      height: 60px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.22);
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex; gap: 0; list-style: none;
+    }
+    .nav-links a {
+      color: #D4BEA8;
+      text-decoration: none;
+      font-size: 0.82rem; font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 0 14px;
+      height: 60px;
+      display: flex; align-items: center;
+      border-bottom: 3px solid transparent;
+      transition: color var(--transition), border-color var(--transition);
+    }
+    .nav-links a:hover, .nav-links a:focus {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+      outline: none;
+    }
+
+    /* hamburger */
+    .nav-toggle {
+      display: none;
+      background: none; border: none;
+      cursor: pointer; padding: 8px;
+      flex-direction: column; gap: 5px;
+    }
+    .nav-toggle span {
+      display: block; width: 24px; height: 2px;
+      background: var(--gold); border-radius: 2px;
+      transition: var(--transition);
+    }
+
+    @media (max-width: 700px) {
+      .nav-toggle { display: flex; }
+      .nav-links {
+        display: none; flex-direction: column;
+        position: absolute; top: 60px; left: 0; right: 0;
+        background: var(--dark); padding: 12px 0;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links a { height: 44px; justify-content: center; }
+    }
+
+    /* ─────────────────────────────────────────
+       HERO
+    ───────────────────────────────────────── */
+    #home {
+      min-height: 92vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 48px;
+      padding: 80px 8vw 60px;
+      background:
+        radial-gradient(ellipse 70% 60% at 80% 50%, rgba(229,36,59,0.10) 0%, transparent 70%),
+        var(--mist);
+      position: relative;
+      overflow: hidden;
+    }
+    #home::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23E5243B' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .hero-text { position: relative; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 20px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block; width: 32px; height: 2px;
+      background: var(--red);
+    }
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 700; line-height: 1.12;
+      color: var(--dark);
+      margin-bottom: 20px;
+    }
+    h1 span { color: var(--red); }
+    .hero-sub {
+      font-size: 0.95rem; color: var(--mid);
+      max-width: 44ch; margin-bottom: 32px;
+    }
+    .hero-meta {
+      display: flex; flex-wrap: wrap; gap: 12px;
+      margin-bottom: 36px;
+    }
+    .meta-chip {
+      background: #FFF0EC;
+      border: 1px solid #FCCDC4;
+      border-radius: 50px;
+      padding: 4px 14px;
+      font-size: 0.78rem; color: var(--mid);
+      font-weight: 600;
+    }
+    .sdg-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--red); color: #fff;
+      border-radius: var(--radius);
+      padding: 12px 20px;
+      font-size: 0.85rem; font-weight: 700;
+      letter-spacing: 0.04em;
+      box-shadow: 0 4px 16px rgba(229,36,59,0.28);
+    }
+    .sdg-icon {
+      width: 36px; height: 36px; border-radius: 6px;
+      background: #fff; display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    .hero-visual {
+      display: flex; justify-content: center; align-items: center;
+    }
+    .hero-card-stack {
+      position: relative; width: 280px; height: 320px;
+    }
+    .hc {
+      position: absolute;
+      width: 220px; height: 260px;
+      border-radius: 18px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 10px; font-weight: 700;
+    }
+    .hc-1 {
+      background: var(--gold);
+      top: 40px; left: 40px;
+      transform: rotate(-6deg);
+      opacity: 0.7;
+    }
+    .hc-2 {
+      background: var(--orange);
+      top: 20px; left: 20px;
+      transform: rotate(-2deg);
+      opacity: 0.85;
+    }
+    .hc-3 {
+      background: var(--red);
+      top: 0; left: 0;
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
+    .hc-num {
+      font-family: var(--font-display);
+      font-size: 4rem; line-height: 1;
+    }
+    .hc-label { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+    @media (max-width: 900px) {
+      #home { grid-template-columns: 1fr; min-height: auto; padding: 60px 6vw 48px; }
+      .hero-visual { display: none; }
+    }
+
+    /* ─────────────────────────────────────────
+       SECTIONS SHARED
+    ───────────────────────────────────────── */
+    section { padding: 88px 8vw; }
+    section:nth-child(even) { background: #FAF0E8; }
+
+    .section-header {
+      margin-bottom: 52px;
+    }
+    .section-eyebrow {
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-eyebrow::after {
+      content: '';
+      flex: 1; max-width: 60px; height: 2px;
+      background: var(--red);
+    }
+    h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 700; color: var(--dark);
+    }
+    .section-desc {
+      margin-top: 12px; max-width: 60ch;
+      color: var(--mid); font-size: 0.95rem;
+    }
+
+    /* ─────────────────────────────────────────
+       CARDS GRID
+    ───────────────────────────────────────── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 28px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      display: flex; flex-direction: column;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(26,17,8,0.14);
+    }
+
+    .card-num {
+      background: var(--dark);
+      color: var(--gold);
+      font-family: var(--font-mono);
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 8px 18px;
+    }
+
+    .video-wrap {
+      position: relative;
+      padding-top: 56.25%; /* 16:9 */
+      background: #1a1108;
+    }
+    .video-wrap iframe {
+      position: absolute;
+      inset: 0; width: 100%; height: 100%;
+      border: none;
+    }
+
+    .card-body { padding: 22px 22px 28px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--dark);
+    }
+    .card-desc { font-size: 0.88rem; color: var(--mid); }
+    .card-reflection {
+      border-left: 3px solid var(--red);
+      padding-left: 14px;
+      font-size: 0.84rem; color: #5A3D2B;
+      font-style: italic;
+      margin-top: auto;
+    }
+    .card-reflection strong {
+      font-style: normal; font-size: 0.7rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--red); display: block; margin-bottom: 4px;
+    }
+
+    .card-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 0.8rem; font-weight: 700;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: background var(--transition), transform var(--transition);
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary {
+      background: var(--dark); color: var(--gold);
+    }
+    .btn-primary:hover { background: var(--mid); }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--red);
+      color: var(--red);
+    }
+    .btn-outline:hover { background: var(--red); color: #fff; }
+
+    /* project extra */
+    .problem-tag {
+      background: #FFF3ED; border: 1px solid #FCCDC4;
+      border-radius: 6px; padding: 10px 14px;
+      font-size: 0.82rem; color: var(--mid);
+    }
+    .problem-tag strong { color: var(--red); display: block; font-size: 0.7rem;
+      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 3px; }
+
+    /* ─────────────────────────────────────────
+       REFLECTION
+    ───────────────────────────────────────── */
+    #reflection .inner {
+      max-width: 780px; margin: 0 auto;
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 48px 52px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+    #reflection .inner::before {
+      content: '\201C';
+      font-family: var(--font-display);
+      font-size: 8rem; line-height: 0.8;
+      color: var(--red); opacity: 0.12;
+      position: absolute; top: 20px; left: 32px;
+    }
+    #reflection p {
+      font-size: 1.05rem; line-height: 1.85;
+      color: var(--mid);
+    }
+    @media (max-width: 600px) {
+      #reflection .inner { padding: 28px 22px; }
+    }
+
+    /* ─────────────────────────────────────────
+       SKILLS
+    ───────────────────────────────────────── */
+    .skills-cloud {
+      display: flex; flex-wrap: wrap; gap: 12px;
+    }
+    .skill-pill {
+      background: var(--dark); color: var(--gold);
+      border-radius: 50px;
+      padding: 8px 20px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 0.06em;
+      transition: background var(--transition), transform var(--transition);
+    }
+    .skill-pill:hover { background: var(--red); color: #fff; transform: scale(1.05); }
+
+    /* ─────────────────────────────────────────
+       RESOURCES
+    ───────────────────────────────────────── */
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .resource-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      display: flex; flex-direction: column; gap: 6px;
+      box-shadow: 0 2px 10px rgba(26,17,8,0.06);
+    }
+    .resource-item h4 {
+      font-size: 0.9rem; font-weight: 700; color: var(--dark);
+    }
+    .resource-item p {
+      font-size: 0.82rem; color: var(--mid);
+    }
+    .resource-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--red); margin-bottom: 4px;
+    }
+
+    /* AI notice */
+    .ai-notice {
+      margin-top: 40px;
+      background: #FFF9EC;
+      border: 1.5px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 20px 28px;
+      font-size: 0.85rem; color: var(--mid);
+    }
+    .ai-notice strong { color: var(--dark); }
+
+    /* ─────────────────────────────────────────
+       FOOTER
+    ───────────────────────────────────────── */
+    footer {
+      background: var(--dark);
+      color: #9C8272;
+      padding: 40px 8vw;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .footer-left {
+      font-family: var(--font-display);
+      font-size: 1.05rem; color: var(--gold);
+      font-weight: 700;
+    }
+    .footer-right { font-size: 0.8rem; letter-spacing: 0.04em; text-align: right; }
+    .footer-sdg {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--red); color: #fff;
+      border-radius: 50px; padding: 4px 12px;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.06em; margin-top: 8px;
+    }
+
+    /* ─────────────────────────────────────────
+       DIVIDER
+    ───────────────────────────────────────── */
+    .section-divider {
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 40px;
+    }
+    .divider-line { flex: 1; height: 1px; background: var(--border); }
+
+    /* responsive tweaks */
+    @media (max-width: 600px) {
+      section { padding: 60px 5vw; }
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <a class="skip-link" href="#home">Skip to main content</a>
+
+  <!-- ═══════════════════════════════
+       NAVIGATION
+  ═══════════════════════════════ -->
+  <nav role="navigation" aria-label="Main navigation">
+    <a href="#home" class="nav-logo" aria-label="Go to top">Adib&nbsp;Nurman</a>
+    <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded')==='true'?'false':'true'); document.querySelector('.nav-links').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" role="list">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#labs">Labs</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#reflection">Reflection</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#resources">Resources</a></li>
+    </ul>
+  </nav>
+
+  <!-- ═══════════════════════════════
+       HERO
+  ═══════════════════════════════ -->
+  <section id="home" aria-label="Introduction">
+    <div class="hero-text">
+      <div class="hero-eyebrow">e-Portfolio · A212263</div>
+      <h1>Muhammad<br/><span>Adib Nurman</span><br/>Bin Zaidi Sham</h1>
+      <p class="hero-sub">
+        Welcome to my front-end and native mobile application engineering repository.
+        This portfolio presents my growth structure, mapping out iterative user interface
+        experiments up to architecture-driven application deployment.
+      </p>
+      <div class="hero-meta">
+        <span class="meta-chip">Bachelor Software Engineering</span>
+        <span class="meta-chip">Instructor: Dr Nazatul Aini</span>
+        <span class="meta-chip">Matric: A212263</span>
+      </div>
+      <div class="sdg-badge">
+        <div class="sdg-icon" aria-hidden="true">🌍</div>
+        <div>
+          <div style="font-size:0.68rem;opacity:0.8;letter-spacing:0.1em;">ALIGNED WITH</div>
+          SDG 1 — No Poverty
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="hero-card-stack">
+        <div class="hc hc-1"><span class="hc-num">01</span><span class="hc-label">SDG</span></div>
+        <div class="hc hc-2"><span class="hc-num">01</span><span class="hc-label">SDG</span></div>
+        <div class="hc hc-3">
+          <span class="hc-num">01</span>
+          <span class="hc-label">No Poverty</span>
+          <span style="font-size:0.7rem;opacity:0.7;margin-top:4px;text-align:center;padding:0 20px;">End poverty in all its forms everywhere</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       LABS
+  ═══════════════════════════════ -->
+  <section id="labs" aria-labelledby="labs-heading">
+    <div class="section-header">
+      <div class="section-eyebrow">Laboratory Work</div>
+      <h2 id="labs-heading">Labs &amp; Experiments</h2>
+      <p class="section-desc">Five progressive lab modules exploring UI, interaction design, Material Design, navigation architecture, and local data persistence.</p>
+    </div>
+    <div class="cards-grid">
+
+      <!-- LAB 1 -->
+      <article class="card" aria-label="Lab 1: UI Design">
+        <div class="card-num">LAB 01 · UI Design</div>
+        <div class="video-wrap">
+          <iframe
+            src="https://www.youtube.com/embed/KDrG-BN15d4"
+            title="Lab 1 — UI Design demo video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy">
+          </iframe>
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">User Interface Design</h3>
+          <p class="card-desc">Bridging backend logic with human experience — building intuitive, visually engaging digital environments.</p>
+          <div class="card-reflection">
+            <strong>Reflection</strong>
+            The art and science of bridging the gap between complex backend logic and the human experience, transforming code into intuitive, visually engaging digital environments. Successful UI development goes beyond aesthetics; it requires deep empathy for the user to ensure every click, transition, and layout feels seamless and accessible.
+          </div>
+        </div>
+      </article>
+
+      <!-- LAB 2 -->
+      <article class="card" aria-label="Lab 2: Interaction Design">
+        <div class="card-num">LAB 02 · Interaction</div>
+        <div class="video-wrap">
+          <iframe
+            src="https://www.youtube.com/embed/2kF2jIxHQOU"
+            title="Lab 2 — Interaction Design demo video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy">
+          </iframe>
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Interaction Design</h3>
+          <p class="card-desc">Shaping digital products to facilitate seamless, intuitive, and meaningful communication between humans and technology.</p>
+          <div class="card-reflection">
+            <strong>Reflection</strong>
+            Interaction Design is the art of shaping digital products to facilitate seamless, intuitive, and meaningful communication between humans and technology. By focusing on user behavior, anticipated needs, and thoughtful feedback loops, it transforms complex systems into engaging and effortless everyday experiences.
+          </div>
+        </div>
+      </article>
+
+      <!-- LAB 3 -->
+      <article class="card" aria-label="Lab 3: Material Design">
+        <div class="card-num">LAB 03 · Material Design</div>
+        <div class="video-wrap">
+          <iframe
+            src="https://www.youtube.com/embed/tnGxMUD2KYc"
+            title="Lab 3 — Material Design demo video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy">
+          </iframe>
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Material Design Standards</h3>
+          <p class="card-desc">Leveraging tactile surfaces, intentional whitespace, and responsive animations to bridge aesthetics and functionality.</p>
+          <div class="card-reflection">
+            <strong>Reflection</strong>
+            Material Design Standards successfully bridge the gap between aesthetics and functionality by using tactile surfaces, intentional whitespace, and responsive animations to mimic the physical world. By prioritizing consistent user experiences across diverse platforms, these guidelines transform complex digital interactions into intuitive, accessible, and visually cohesive journeys.
+          </div>
+        </div>
+      </article>
+
+      <!-- LAB 4 -->
+      <article class="card" aria-label="Lab 4: Navigation Architecture">
+        <div class="card-num">LAB 04 · Navigation</div>
+        <div class="video-wrap">
+          <iframe
+            src="https://www.youtube.com/embed/8H8x5NZ23co"
+            title="Lab 4 — Navigation Architecture demo video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy">
+          </iframe>
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Advanced Navigation Architecture</h3>
+          <p class="card-desc">Real-time data fusion and predictive AI for ultra-precise positioning beyond traditional GPS dependencies.</p>
+          <div class="card-reflection">
+            <strong>Reflection</strong>
+            Advanced Navigation Architecture leverages real-time data fusion and predictive AI to seamlessly integrate multi-sensor inputs for ultra-precise positioning. By moving beyond traditional GPS dependencies, it creates a highly adaptive framework essential for the next generation of autonomous and deep-space mobility.
+          </div>
+        </div>
+      </article>
+
+      <!-- LAB 5 -->
+      <article class="card" aria-label="Lab 5: Room Persistence Library">
+        <div class="card-num">LAB 05 · Room / Persistence</div>
+        <div class="video-wrap">
+          <iframe
+            src="https://www.youtube.com/embed/GAbZpTxAA1c"
+            title="Lab 5 — Room Persistent Library demo video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy">
+          </iframe>
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Room Persistent Library</h3>
+          <p class="card-desc">A powerful abstraction layer over SQLite, streamlining local data management in Android with compile-time SQL checks.</p>
+          <div class="card-reflection">
+            <strong>Reflection</strong>
+            The Room Persistent Library serves as a powerful abstraction layer over SQLite, streamlining local data management in Android by eliminating tedious boilerplate code. By leveraging compile-time checks for SQL queries and seamless integration with architecture components, it ensures robust, type-safe data persistence that significantly enhances app reliability.
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       PROJECTS
+  ═══════════════════════════════ -->
+  <section id="projects" aria-labelledby="projects-heading">
+    <div class="section-header">
+      <div class="section-eyebrow">Applied Projects</div>
+      <h2 id="projects-heading">Projects</h2>
+      <p class="section-desc">Two capstone projects applying lab techniques to real engineering challenges — from navigation to cloud-sensor synchronisation.</p>
+    </div>
+    <div class="cards-grid">
+
+      <!-- PROJECT 1 -->
+      <article class="card" aria-label="Project 1: Job Finder — Navigation">
+        <div class="card-num">PROJECT 01 · Lab 4 + Working Features</div>
+        <div class="video-wrap">
+          <iframe
+            src="https://www.youtube.com/embed/GAbZpTxAA1c"
+            title="Project 1 — Job Finder VSR demo video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy">
+          </iframe>
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Job Finder</h3>
+          <div class="problem-tag">
+            <strong>Problem Statement</strong>
+            Fragmented UI states and loose routing parameters cause unexpected app behavior during navigation transitions.
+          </div>
+          <div class="card-reflection">
+            <strong>Lessons Learned</strong>
+            By strictly enforcing rigorous state containment rules across structured views, we eliminated erratic UI redraws and established a structural discipline that makes tracking application workflows highly reliable.
+          </div>
+          <div class="card-actions">
+            <a href="https://github.com/AdibNurman210/a212263_adibnurman_drnazatul_project1"
+               class="btn btn-primary"
+               target="_blank" rel="noopener noreferrer"
+               aria-label="View Project 1 on GitHub (opens in new tab)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
+              View on GitHub
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- PROJECT 2 -->
+      <article class="card" aria-label="Project 2: Job Finder — Cloud + Sensors">
+        <div class="card-num">PROJECT 02 · Lab 5 + API + Sensors + Cloud</div>
+        <div class="video-wrap">
+          <iframe
+            src="https://www.youtube.com/embed/6L_lVD1TChE?si=SMrHpYx53DEScnTU"
+            title="Project 2 — Job Finder VSR demo video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+            loading="lazy">
+          </iframe>
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Job Finder <span style="font-size:0.75rem;color:var(--red);font-family:var(--font-mono);font-weight:700;">v2.0</span></h3>
+          <div class="problem-tag">
+            <strong>Problem Statement</strong>
+            Synchronizing local device sensors with real-time remote cloud databases without draining mobile battery resources.
+          </div>
+          <div class="card-reflection">
+            <strong>Lessons Learned</strong>
+            By managing data synchronization loops with external endpoints, we gained a clearer understanding of real-time latency challenges, while implementing resource-conscious hardware background sensors optimized processing power and preserved battery life.
+          </div>
+          <div class="card-actions">
+            <a href="https://github.com/AdibNurman210/a212263_adibnurman_drnazatul_project2"
+               class="btn btn-primary"
+               target="_blank" rel="noopener noreferrer"
+               aria-label="View Project 2 on GitHub (opens in new tab)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
+              View on GitHub
+            </a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       REFLECTION
+  ═══════════════════════════════ -->
+  <section id="reflection" aria-labelledby="reflection-heading">
+    <div class="section-header">
+      <div class="section-eyebrow">Learning Journey</div>
+      <h2 id="reflection-heading">Reflection</h2>
+    </div>
+    <div class="inner">
+      <p>
+        Throughout this course, my journey profoundly transformed my understanding of modular native application architecture.
+        Transitioning from designing declarative UIs in laboratory modules to implementing complex data integrations with persistent
+        storage allowed me to put real-world software engineering concepts into practice. Furthermore, balancing device-side processing
+        bottlenecks against continuous sensor tracking pushed me to appreciate scalable codebase structures, establishing a strong
+        foundation for my future software deployment goals.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       SKILLS
+  ═══════════════════════════════ -->
+  <section id="skills" aria-labelledby="skills-heading">
+    <div class="section-header">
+      <div class="section-eyebrow">Technical Competencies</div>
+      <h2 id="skills-heading">Skills &amp; Tech Stack</h2>
+      <p class="section-desc">Languages, frameworks, and tools used across all five labs and both capstone projects.</p>
+    </div>
+    <div class="skills-cloud" role="list" aria-label="Skills and technologies">
+      <span class="skill-pill" role="listitem">Kotlin</span>
+      <span class="skill-pill" role="listitem">Jetpack Compose</span>
+      <span class="skill-pill" role="listitem">Room</span>
+      <span class="skill-pill" role="listitem">Retrofit</span>
+      <span class="skill-pill" role="listitem">Firebase Firestore</span>
+      <span class="skill-pill" role="listitem">ML Kit</span>
+      <span class="skill-pill" role="listitem">CameraX</span>
+      <span class="skill-pill" role="listitem">Navigation Component</span>
+      <span class="skill-pill" role="listitem">Material Design 3</span>
+      <span class="skill-pill" role="listitem">ViewModel</span>
+      <span class="skill-pill" role="listitem">LiveData</span>
+      <span class="skill-pill" role="listitem">SQLite</span>
+      <span class="skill-pill" role="listitem">REST APIs</span>
+      <span class="skill-pill" role="listitem">Android SDK</span>
+      <span class="skill-pill" role="listitem">GitHub</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       RESOURCES
+  ═══════════════════════════════ -->
+  <section id="resources" aria-labelledby="resources-heading">
+    <div class="section-header">
+      <div class="section-eyebrow">References &amp; Acknowledgements</div>
+      <h2 id="resources-heading">Resources</h2>
+      <p class="section-desc">APIs, libraries, and tools referenced throughout this portfolio. AI assistance is transparently acknowledged below.</p>
+    </div>
+    <div class="resources-grid">
+      <div class="resource-item">
+        <div class="resource-dot" aria-hidden="true"></div>
+        <h4>Android Jetpack Libraries</h4>
+        <p>Room Persistence Library, Navigation Component, ViewModel, LiveData — official Google/Android documentation.</p>
+      </div>
+      <div class="resource-item">
+        <div class="resource-dot" aria-hidden="true"></div>
+        <h4>Firebase Firestore</h4>
+        <p>Google Firebase real-time cloud database used for cloud sync in Project 2.</p>
+      </div>
+      <div class="resource-item">
+        <div class="resource-dot" aria-hidden="true"></div>
+        <h4>Retrofit (Square)</h4>
+        <p>Type-safe HTTP client for Android and Java, used for REST API integration.</p>
+      </div>
+      <div class="resource-item">
+        <div class="resource-dot" aria-hidden="true"></div>
+        <h4>ML Kit (Google)</h4>
+        <p>Machine learning SDK for mobile — used for on-device vision tasks in labs.</p>
+      </div>
+      <div class="resource-item">
+        <div class="resource-dot" aria-hidden="true"></div>
+        <h4>CameraX (Jetpack)</h4>
+        <p>Jetpack support library for consistent, reliable camera functionality across devices.</p>
+      </div>
+      <div class="resource-item">
+        <div class="resource-dot" aria-hidden="true"></div>
+        <h4>Material Design 3</h4>
+        <p>Google's design system — components, tokens, and guidelines followed in Lab 3 and both projects.</p>
+      </div>
+    </div>
+
+    <div class="ai-notice" role="note" aria-label="AI assistance disclosure">
+      <strong>AI Assistance Acknowledgement</strong><br/>
+      Portions of this portfolio's HTML/CSS structure were generated or assisted with the help of AI language models (Claude by Anthropic) as a development aid. All code has been reviewed, understood, and customized by the student. The use of AI tools is disclosed in alignment with academic integrity standards.
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       FOOTER
+  ═══════════════════════════════ -->
+  <footer role="contentinfo">
+    <div class="footer-left">
+      Muhammad Adib Nurman Bin Zaidi Sham
+      <br/>
+      <span class="footer-sdg" aria-label="Sustainable Development Goal 1: No Poverty">
+        🌍 SDG 1 — No Poverty
+      </span>
+    </div>
+    <div class="footer-right">
+      Matric No: A212263<br/>
+      Bachelor Software Engineering<br/>
+      Instructor: Dr Nazatul Aini<br/>
+      © 2025
+    </div>
+  </footer>
+
+  <script>
+    // Close nav on link click (mobile)
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.querySelector('.nav-links').classList.remove('open');
+        document.querySelector('.nav-toggle').setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Active nav link on scroll
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.style.borderBottomColor = 'transparent';
+            link.style.color = '#D4BEA8';
+            if (link.getAttribute('href') === '#' + entry.target.id) {
+              link.style.borderBottomColor = '#FDB714';
+              link.style.color = '#FDB714';
+            }
+          });
+        }
+      });
+    }, { rootMargin: '-30% 0px -65% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+  </script>
+
+</body>
+</html>
